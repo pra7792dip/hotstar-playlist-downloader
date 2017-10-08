@@ -2,7 +2,7 @@
 
 Download HotStar playlists and seasons.
 
-[![Code Climate](https://codeclimate.com/github/singhpratyush/hotstar-playlist-downloader/badges/gpa.svg)](https://codeclimate.com/github/singhpratyush/hotstar-playlist-downloader)
+[![Code Climate](https://codeclimate.com/github/singhpratyush/hotstar-playlist-downloader/badges/gpa.svg)](https://codeclimate.com/github/singhpratyush/hotstar-playlist-downloader) [![Travic CI](https://travis-ci.org/singhpratyush/hotstar-playlist-downloader.svg?branch=master)](https://travis-ci.org/singhpratyush/hotstar-playlist-downloader)
 
 ### Usage
 ```shell
