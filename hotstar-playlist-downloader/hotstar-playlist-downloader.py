@@ -74,10 +74,11 @@ def main():
     if match_pl:
         playlist_id = match_pl.groups()[0]
         links += get_playlist_links(playlist_id)
-    if len(links) == 0:
-        print('No links fetched')
-        sys.exit(1)
-    download_many(links)
+    if not links:
+        print('Not a season or playlist, trying to download the link directly.')
+        download(link)
+    else:
+        download_many(links)
 
 
 if __name__ == '__main__':
