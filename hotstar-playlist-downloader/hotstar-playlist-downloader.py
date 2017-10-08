@@ -47,12 +47,22 @@ def download_many(links):
         download(link)
 
 
+def get_season(series):
+    url = 'https://search.hotstar.com/AVS/besc?action=SearchContents&appVer' \
+          'sion=5.0.40&channel=PCTV&facets=season&maxResult=1&moreFilters=s' \
+          'eries:%s&query=*&type=EPISODE' % series
+    resp = requests.get(url)
+    data = resp.json()
+    return int(data['resultObj']['response']['docs'][0]['season'])
+
+
 def main():
     link = sys.argv[1]
     links = []
     match_se = re_link_se.match(link)
     if match_se:
-        season, offset = map(int, match_se.groups())
+        series, offset = map(int, match_se.groups())
+        season = get_season(series)
         final_season = season + offset - 1
         links += get_season_links(final_season)
     match_pl = re_link_pl.match(link)
