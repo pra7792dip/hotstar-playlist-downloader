@@ -62,9 +62,14 @@ def main():
     match_se = re_link_se.match(link)
     if match_se:
         series, offset = map(int, match_se.groups())
-        season = get_season(series)
-        final_season = season + offset - 1
-        links += get_season_links(final_season)
+        try:
+            final_season = series + offset - 1
+            links += get_season_links(final_season)
+        except TypeError:
+            season = get_season(series)
+            final_season = season + offset - 1
+            links += get_season_links(final_season)
+
     match_pl = re_link_pl.match(link)
     if match_pl:
         playlist_id = match_pl.groups()[0]
