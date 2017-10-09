@@ -13,7 +13,7 @@ re_link_se = re.compile(
 
 def get_playlist_links(playlist_id):
     url = 'http://search.hotstar.com/AVS/besc?action=SearchContents&appVersi' \
-          'on=5.0.37&channel=PCTV&maxResult=10000&moreFilters=series:'\
+          'on=5.0.40&channel=PCTV&maxResult=10000&moreFilters=series:'\
           + playlist_id \
           + '%3B&query=*&searchOrder=last_broadcast_date+desc,year+desc,titl' \
             'e+asc&startIndex=0&type=EPISODE'
@@ -28,7 +28,8 @@ def get_playlist_links(playlist_id):
 
 def get_season_links(season):
     url = 'http://account.hotstar.com/AVS/besc?action=GetArrayContentList&a' \
-          'ppVersion=5.0.37&categoryId=' + str(season) + '&channel=PCTV'
+          'ppVersion=5.0.40&categoryId=' + str(season) + '&channel=PCTV'
+    print(url)    
     request = requests.get(url)
     request.raise_for_status()
     json_obj = request.json()
@@ -63,11 +64,11 @@ def main():
     if match_se:
         series, offset = map(int, match_se.groups())
         try:
-            final_season = series + offset - 1
-            links += get_season_links(final_season)
-        except TypeError:
             season = get_season(series)
             final_season = season + offset - 1
+            links += get_season_links(final_season)
+        except IndexError:
+            final_season = series + offset - 1
             links += get_season_links(final_season)
 
     match_pl = re_link_pl.match(link)
