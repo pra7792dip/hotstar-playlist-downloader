@@ -48,7 +48,8 @@ def download_many(links):
 
 
 def get_season(series, offset):
-    url = 'https://account.hotstar.com/AVS/besc?action=GetCatalogueTree&appVersion=5.0.40&categoryId=%s&channel=PCTV' % series
+    url = 'https://account.hotstar.com/AVS/besc?action=GetCatalogueTree&appV' \
+          'ersion=5.0.40&categoryId=%s&channel=PCTV' % series
     resp = requests.get(url)
     data = resp.json()
     cat_list = data['resultObj']['categoryList'][0]['categoryList']
