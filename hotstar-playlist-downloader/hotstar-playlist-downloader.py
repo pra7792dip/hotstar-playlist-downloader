@@ -8,7 +8,7 @@ import subprocess
 re_link_pl = re.compile(
     r'.*?hotstar\.com/tv/(?!/).*/[0-9].*/episodes/([0-9].*)/[0-9].*')
 re_link_se = re.compile(
-    r'.*?hotstar.com/tv/(?!/).*?/([0-9].*)/seasons/season-([0-9])')
+    r'.*?hotstar.com/tv/(?!/).*?/([0-9].*)/seasons/season-([0-9]+)')
 
 
 def get_playlist_links(playlist_id):
@@ -29,7 +29,6 @@ def get_playlist_links(playlist_id):
 def get_season_links(season):
     url = 'http://account.hotstar.com/AVS/besc?action=GetArrayContentList&a' \
           'ppVersion=5.0.40&categoryId=' + str(season) + '&channel=PCTV'
-    print(url)    
     request = requests.get(url)
     request.raise_for_status()
     json_obj = request.json()
@@ -48,13 +47,13 @@ def download_many(links):
         download(link)
 
 
-def get_season(series):
-    url = 'https://search.hotstar.com/AVS/besc?action=SearchContents&appVer' \
-          'sion=5.0.40&channel=PCTV&facets=season&maxResult=1&moreFilters=s' \
-          'eries:%s&query=*&type=EPISODE' % series
+def get_season(series, offset):
+    url = 'https://account.hotstar.com/AVS/besc?action=GetCatalogueTree&appVersion=5.0.40&categoryId=%s&channel=PCTV' % series
     resp = requests.get(url)
     data = resp.json()
-    return int(data['resultObj']['response']['docs'][0]['season'])
+    cat_list = data['resultObj']['categoryList'][0]['categoryList']
+    season_obj = cat_list[offset]
+    return int(season_obj['categoryId'])
 
 
 def main():
@@ -64,12 +63,10 @@ def main():
     if match_se:
         series, offset = map(int, match_se.groups())
         try:
-            season = get_season(series)
-            final_season = season + offset - 1
-            links += get_season_links(final_season)
+            final_season = get_season(series, offset)
         except IndexError:
             final_season = series + offset - 1
-            links += get_season_links(final_season)
+        links += get_season_links(final_season)
 
     match_pl = re_link_pl.match(link)
     if match_pl:
