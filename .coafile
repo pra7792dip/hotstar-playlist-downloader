@@ -1,0 +1,4 @@
+[pep8]
+# Python lint
+files = **/*.py
+bears = PEP8Bear
