@@ -55,9 +55,9 @@ def download_by_title(link):
 def download_many(links, ep):
     for i in range(len(links)):
         if(args['save'] == 'number'):
-	        download_by_number(links[i], ep[i])
-	    else:
-	        download_by_title(links[i])
+            download_by_number(links[i], ep[i])
+        else:
+            download_by_title(links[i])
 
 
 def get_season(series, offset):
