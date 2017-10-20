@@ -6,7 +6,7 @@ Download HotStar playlists and seasons.
 
 ### Usage
 ```shell
-./hotstar-playlist-downloader.py <playlist or season URL>
+./hotstar-playlist-downloader.py -s <title or number> -u <playlist or season URL>
 ```
 
 ### Dependencies
