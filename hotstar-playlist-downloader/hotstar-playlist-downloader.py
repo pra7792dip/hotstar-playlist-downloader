@@ -90,8 +90,8 @@ def main():
         except IndexError:
             final_season = series + offset - 1
         result = get_season_links(final_season)
-	links += result[0]
-	ep += result[1]
+        links += result[0]
+        ep += result[1]
 
     match_pl = re_link_pl.match(link)
     if match_pl:
