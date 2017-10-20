@@ -9,5 +9,5 @@ install :
   - pip install -r requirements.txt
 
 script :
-  - ./hotstar-playlist-downloader/hotstar-playlist-downloader.py http://www.hotstar.com/tv/mahabharat/435/seasons/season-1
+  - ./hotstar-playlist-downloader/hotstar-playlist-downloader.py -s number -u http://www.hotstar.com/tv/mahabharat/435/seasons/season-1
   - coala --ci
