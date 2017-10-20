@@ -3,7 +3,7 @@ import sys
 import re
 import requests
 import subprocess
-
+import argparse
 
 re_link_pl = re.compile(
     r'.*?hotstar\.com/tv/(?!/).*/[0-9].*/episodes/([0-9].*)/[0-9].*')
@@ -32,19 +32,32 @@ def get_season_links(season):
     request = requests.get(url)
     request.raise_for_status()
     json_obj = request.json()
-    return ['http://www.hotstar.com/%s' % x['contentId']
-            for x in json_obj['resultObj']['contentList']]
+    ep = []
+    for x in json_obj['resultObj']['contentList']:
+        y = x['episodeNumber']
+        ep.append(y)
+    return [['http://www.hotstar.com/%s' % x['contentId']
+            for x in json_obj['resultObj']['contentList']], ep]
 
 
-def download(link):
+def download_by_number(link, episode):
+    print('Downloading Episode : ' + str(episode))
+    command = 'youtube-dl -o ' + "Episode-" + str(episode) + " " + link
+    subprocess.call(command, shell=True)
+
+
+def download_by_title(link):
     print('Downloading ' + link)
     command = 'youtube-dl ' + link
     subprocess.call(command, shell=True)
 
 
-def download_many(links):
-    for link in links:
-        download(link)
+def download_many(links, ep):
+    for i in range(len(links)):
+        if(args['save'] == 'number'):
+	    download_by_number(links[i], ep[i])
+	else:
+	    download_by_title(links[i])
 
 
 def get_season(series, offset):
@@ -58,8 +71,17 @@ def get_season(series, offset):
 
 
 def main():
-    link = sys.argv[1]
+    
+    parser = argparse.ArgumentParser(description='Hotstar Downloader Usage')
+    parser.add_argument('-s','--save', help='Save video by title or number.[default is title]', default='title', choices=['title', 'number'])
+    parser.add_argument('-u','--url', help='provide url of playlist or season', required=True)
+    
+    global args
+    args = vars(parser.parse_args())
+
+    link = args['url']
     links = []
+    ep = []
     match_se = re_link_se.match(link)
     if match_se:
         series, offset = map(int, match_se.groups())
@@ -67,7 +89,9 @@ def main():
             final_season = get_season(series, offset)
         except IndexError:
             final_season = series + offset - 1
-        links += get_season_links(final_season)
+        result = get_season_links(final_season)
+	links += result[0]
+	ep += result[1]
 
     match_pl = re_link_pl.match(link)
     if match_pl:
@@ -77,7 +101,7 @@ def main():
         print('Not a season or playlist, trying to download the link directly.')
         download(link)
     else:
-        download_many(links)
+        download_many(links, ep)
 
 
 if __name__ == '__main__':
