@@ -37,7 +37,7 @@ def get_season_links(season):
         y = x['episodeNumber']
         ep.append(y)
     return [['http://www.hotstar.com/%s' % x['contentId']
-            for x in json_obj['resultObj']['contentList']], ep]
+             for x in json_obj['resultObj']['contentList']], ep]
 
 
 def download_by_number(link, episode):
@@ -71,11 +71,22 @@ def get_season(series, offset):
 
 
 def main():
-    
+
     parser = argparse.ArgumentParser(description='Hotstar Downloader Usage')
-    parser.add_argument('-s','--save', help='Save video by title or number.[default is title]', default='title', choices=['title', 'number'])
-    parser.add_argument('-u','--url', help='provide url of playlist or season', required=True)
-    
+    parser.add_argument(
+        '-s',
+        '--save',
+        help='Save video by title or number.[default is title]',
+        default='title',
+        choices=[
+            'title',
+            'number'])
+    parser.add_argument(
+        '-u',
+        '--url',
+        help='provide url of playlist or season',
+        required=True)
+
     global args
     args = vars(parser.parse_args())
 
